@@ -4,3 +4,4 @@ scipy
 scipy-stubs
 scikit-learn
 gplearn
+ipywidgets
