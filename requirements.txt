@@ -3,3 +3,4 @@ matplotlib
 scipy
 scipy-stubs
 scikit-learn
+gplearn
