@@ -1,4 +1,4 @@
 <bar> ::= <note> <note> <note> <note>
-<note> ::= <pitch><height>4 | <pitch>4
-<pitch> ::= do | dod | re | red | mi | fa | fad | sol | sold | la | lad | si
-<height> ::= , | '
+<note> ::= <name><octave>4 | <name>4
+<name> ::= "a" | "ais" | "aes"  | "b" | "bis" | "bes"  | "c" | "cis" | "ces"  | "d" | "dis" | "des"  | "e" | "eis" | "ees"  | "f" | "fis" | "fes"  | "g" | "gis" | "ges"  |
+<octave> ::= "," | "'"
