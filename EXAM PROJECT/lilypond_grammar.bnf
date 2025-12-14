@@ -1,0 +1,4 @@
+<bar> ::= <note> <note> <note> <note>
+<note> ::= <pitch><height>4 | <pitch>4
+<pitch> ::= do | dod | re | red | mi | fa | fad | sol | sold | la | lad | si
+<height> ::= , | '

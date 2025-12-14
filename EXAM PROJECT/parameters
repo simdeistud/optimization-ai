@@ -1,0 +1,5 @@
+'EXPERIMENT_NAME': "SCORE_TRANSCRIPTOR"
+'FITNESS_FUNCTION': "supervised_learning.regression"
+'GRAMMAR_FILE': "lilypond_grammar.bnf"
+'MULTICORE': True
+'RANDOM_SEED': 42

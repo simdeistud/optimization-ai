@@ -6,3 +6,5 @@ source ./.venv/bin/activate
 pip install -r ./deps/ponyge2/requirements.txt
 pip install -r requirements.txt
 deactivate
+
+# Files need to be copied to the correct locations inside the PonyGE2 package
