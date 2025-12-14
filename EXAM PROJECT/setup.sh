@@ -1,0 +1,8 @@
+#!/bin/bash
+# This script sets up the environment for the EXAM PROJECT
+git clone https://github.com/PonyGE/PonyGE2.git deps/ponyge2
+python -m venv ./.venv
+source ./.venv/bin/activate
+pip install -r ./deps/ponyge2/requirements.txt
+pip install -r requirements.txt
+deactivate
