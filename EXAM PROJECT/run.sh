@@ -1,0 +1,1 @@
+ python ponyge.py --grammar_file lilypond_grammar.bnf --initialisation uniform_tree --selection tournament --fitness_function score_ff --target /tmp/targetscore.png
