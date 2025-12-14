@@ -1,3 +1,4 @@
 <bar> ::= <note> <note> <note> <note>
-<note> ::= <name>4
+<note> ::= <name><pitch>4
 <name> ::= "a" | "b" | "c" | "d" | "e" | "f" | "g" |
+<pitch> ::= "'" | "," | ""

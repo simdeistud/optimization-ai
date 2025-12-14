@@ -8,19 +8,21 @@ from algorithm.parameters import params
 class score_ff(base_ff):
     def __init__(self):
         super().__init__()
-        maximise = True
+        self.maximise = True
 
     def evaluate(self, ind, **kwargs):
         # We add additional data to complete the score
-        pre = "\\version \"2.24.0\" \\paper { tagline = ##f } timeSig = { \\time 4/4 \\omit TimeSignature } midScoreLook = { \\omit Clef \\omit KeySignature } \\score { \\new Staff { \\relative c' { \\key c \\major \\midScoreLook \\timeSig "
-        post = " }} \\layout { }}"
+        pre = "\\version \"2.24.0\" \\paper { tagline = ##f } \\score { \\new Staff { \\relative c'' { \\key c \\major \\bar \"|\" "
+        post = " \\bar \"|\" }} \\layout { }}"
+        print(ind)
         # We write the score to a tmp location (lilypond doesn't work well with stdin and stdout)
         with open('/tmp/currscore.ly', "w", encoding="utf-8") as f:
             f.write(f"{pre}{ind.phenotype}{post}")
         if subprocess.call([lilyponddist.lilypondbin(), '--png', '-o', '/tmp/currscore', '/tmp/currscore.ly']) == 1:
-            return self.default_fitness
+            fit =  self.default_fitness
         else:
-            return common_black_pixels("/tmp/currscore.png", params['TARGET'])
+            fit =  common_black_pixels("/tmp/currscore.png", params['TARGET'])
+        return fit
 
 def load_rgba_to_gray(path: str) -> np.ndarray:
     """
@@ -70,4 +72,5 @@ def common_black_pixels(img1_path: str, img2_path: str, threshold: float = 128.0
 
     # Common black pixels = positions where both are 0
     common_black = np.sum((bw1 == 0) & (bw2 == 0))
-    return common_black, bw1, bw2
+    print(f"fitness: {common_black}")
+    return common_black
