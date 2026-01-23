@@ -11,3 +11,4 @@ graphviz
 neat-python
 networkx
 pygame
+seaborn
