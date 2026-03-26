@@ -59,5 +59,5 @@ def real_GA(
             pop.append(child)
         pop = selection(pop, n_pop - elites_n, embedded_fitness(fitness, target, worN))
         pop.extend(elites)
-    if elitism: best.append(max(best, key=lambda x: fitness(x, target, worN)))
+    if elitism: best.append(max(best, embedded_fitness(fitness, target, worN)))
     return best
