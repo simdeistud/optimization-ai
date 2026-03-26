@@ -1,9 +1,9 @@
 import bisect
 import random
 
-def roulette_selection(pop, n_pop, fitness, target):
+def roulette_selection(pop, n_pop, fitness):
     # Compute raw fitness values
-    fvals = [float(fitness(ind, target)) for ind in pop]
+    fvals = [float(fitness(ind)) for ind in pop]
 
     # Shift to strictly positive domain
     min_val = min(fvals)

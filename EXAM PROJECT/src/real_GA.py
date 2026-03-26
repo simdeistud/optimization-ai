@@ -1,6 +1,6 @@
 import random
-from fitness import minimax_fitness
-from selection import roulette_selection
+from fitness import *
+from selection import *
 
 
 def init_individual(order):
@@ -14,10 +14,12 @@ def init_pop(order, n_pop):
     return [init_individual(order) for _ in range(n_pop)]
 
 
-def gaussian_mut(individual, p=0.01):
+def gaussian_mut(individual, p_mut=None):
+    if p_mut is None:
+        p_mut = 1/len(individual)
     mutated = []
     for coeff in individual:
-        if random.random() < p:
+        if random.random() < p_mut:
             mutated.append(coeff + random.gauss())
         else:
             mutated.append(coeff)
@@ -38,6 +40,7 @@ def real_GA(
         order=8,
         target=lambda w: 1,
         fitness=minimax_fitness,
+        worN=512,
         selection=roulette_selection,
         elitism=False,
         elites_perc=5):
@@ -46,7 +49,7 @@ def real_GA(
     # Population initialization
     pop = init_pop(order, n_pop)
     for _ in range(generations):
-        pop.sort(key=lambda x: fitness(x, target), reverse=True)
+        pop.sort(key=lambda x: fitness(x, target, worN), reverse=True)
         elites = pop[:elites_n]
         best.append(pop[0])
         for _ in range(n_pop):
@@ -54,7 +57,7 @@ def real_GA(
             parent2 = pop[random.randint(0, len(pop) - 1)]
             child = gaussian_mut(recomb_cross(parent1, parent2))
             pop.append(child)
-        pop = selection(pop, n_pop - elites_n, fitness, target)
+        pop = selection(pop, n_pop - elites_n, embedded_fitness(fitness, target, worN))
         pop.extend(elites)
-    if elitism: best.append(max(best, key=lambda x: fitness(x, target)))
+    if elitism: best.append(max(best, key=lambda x: fitness(x, target, worN)))
     return best
