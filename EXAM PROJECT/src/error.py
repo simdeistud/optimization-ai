@@ -2,7 +2,11 @@ from scipy.signal import freqz
 import numpy as np
 
 def minimax_error(individual, target, worN):
-    w, Hi = freqz(individual, worN=worN)  # Hi : complex array
-    Ht = np.array([target(wi) for wi in w], dtype=complex)
-    diff = np.abs(Ht) - np.abs(Hi)
-    return np.max(np.abs(diff))
+    w, Hi = freqz(individual, worN=worN)
+    errs = []
+    for wi, hi in zip(w, Hi):
+        td = target(wi)
+        if td is None:
+            continue
+        errs.append(abs(td - abs(hi)))
+    return max(errs)
