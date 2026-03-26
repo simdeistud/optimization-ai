@@ -68,7 +68,7 @@ def onepoint_cross_CSD(p1, p2, wordlength):
     xover_point *= wordlength
     return p1[:xover_point] + p2[xover_point:], p2[:xover_point] + p1[xover_point:]
 
-def GA_CSD2(
+def csd2_GA(
         n_pop=100,
         generations=100,
         order=8,
