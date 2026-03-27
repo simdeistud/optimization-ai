@@ -54,7 +54,6 @@ def real_GA(
     parent_selection=roulette_pick,
     elitism=True,
     elites_perc=5,
-    tournament_k=3
 ):
     raw_fit = embedded_fitness(fitness, target, worN)
     fit = lambda ind: evaluate(ind, raw_fit)
@@ -71,13 +70,8 @@ def real_GA(
 
         newpop = elites[:]
         while len(newpop) < n_pop:
-            if parent_selection == tournament_pick:
-                p1 = tournament_pick(pop, fit, k=tournament_k)
-                p2 = tournament_pick(pop, fit, k=tournament_k)
-            else:
-                p1 = roulette_pick(pop, fit)
-                p2 = roulette_pick(pop, fit)
-
+            p1 = parent_selection(pop, fit)
+            p2 = parent_selection(pop, fit)
             child = recomb_cross(p1, p2)
             child = gaussian_mut(child)
             newpop.append(child)
