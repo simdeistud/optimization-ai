@@ -90,7 +90,7 @@ def csd_GA(
     generations=100,
     order=8,
     wordlength=8,
-    N_digits=3,
+    N_digits=2,
     N_max=100,
     target=lambda w: 1,
     fitness=minimax_fitness,
