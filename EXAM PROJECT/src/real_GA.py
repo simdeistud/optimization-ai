@@ -52,7 +52,7 @@ def real_GA(
     fitness=minimax_fitness,
     worN=512,
     parent_selection=roulette_pick,
-    elitism=True,
+    elitism=False,
     elites_perc=5,
 ):
     raw_fit = embedded_fitness(fitness, target, worN)
