@@ -5,77 +5,82 @@ from fitness import *
 from selection import *
 
 def mut_CSD(individual, wordlength, N_digits, p_mut=None):
+    """
+    Perform CSD-aware mutation directly on the flat genome.
+
+    Mutation respects:
+        - canonical CSD (no adjacent ±1)
+        - maximum number of non-zero digits per coefficient (N_digits)
+
+    Returns
+    -------
+    CSDIndividual
+        A new mutated individual.
+    """
     genome = individual.genome
 
     if p_mut is None:
         p_mut = 1 / len(genome)
 
-    mutated = []
+    rand = random.random
+    pick = random.choice
 
-    for coeff in genomeToCoeffList(genome, wordlength):
-        curr_d = len([symbol for symbol in coeff if symbol != 0])
-        mutated_coeff = coeff[:]  # copy to avoid aliasing
+    ALT = {
+        -1: (0, 1),
+         0: (-1, 1),
+         1: (-1, 0),
+    }
 
-        for i in range(0, len(mutated_coeff)):
-            if random.random() < p_mut:
-                choices = [-1, 0, 1]
-                choices.remove(mutated_coeff[i])
-                choice = random.choice(choices)
+    # Flat mutated genome, same structure as input
+    mutated_genome = genome[:]
 
-                if mutated_coeff[i] != 0:
-                    mutated_coeff[i] = choice
-                    curr_d -= 0 if choice != 0 else 1
-                    continue
+    # Process one coefficient at a time, but without converting the full genome
+    for start in range(0, len(genome), wordlength):
+        end = start + wordlength
+        word = mutated_genome[start:end]   # local copy of one coefficient
+        n = len(word)
 
-                if curr_d < N_digits:
-                    # First symbol
-                    if i == 0:
-                        if mutated_coeff[i + 1] != 0:
-                            mutated_coeff[i + 1] = 0
-                            curr_d -= 1
-                        mutated_coeff[i] = choice
-                        curr_d += 1
-                        continue
+        # Track nonzero positions inside this coefficient
+        nonzero = {i for i, v in enumerate(word) if v != 0}
 
-                    # Last symbol
-                    if i == len(mutated_coeff) - 1:
-                        if mutated_coeff[i - 1] != 0:
-                            mutated_coeff[i - 1] = 0
-                            curr_d -= 1
-                        mutated_coeff[i] = choice
-                        curr_d += 1
-                        continue
+        for i in range(n):
+            if rand() >= p_mut:
+                continue
 
-                    # Intermediate symbols
-                    if mutated_coeff[i - 1] != 0 and mutated_coeff[i + 1] != 0:
-                        mutated_coeff[i - 1] = 0
-                        curr_d -= 1
-                        mutated_coeff[i + 1] = 0
-                        curr_d -= 1
-                        mutated_coeff[i] = choice
-                        curr_d += 1
-                        continue
+            old = word[i]
+            new = pick(ALT[old])
 
-                    if mutated_coeff[i - 1] != 0:
-                        mutated_coeff[i - 1] = 0
-                        curr_d -= 1
-                        mutated_coeff[i] = choice
-                        curr_d += 1
-                        continue
+            # Case 1: mutate an existing nonzero digit
+            if old != 0:
+                word[i] = new
+                if new == 0:
+                    nonzero.remove(i)
+                continue
 
-                    if mutated_coeff[i + 1] != 0:
-                        mutated_coeff[i + 1] = 0
-                        curr_d -= 1
-                        mutated_coeff[i] = choice
-                        curr_d += 1
-                        continue
+            # Case 2: insert ±1 into a zero digit
 
-                    mutated_coeff[i] = choice
-                    curr_d += 1
+            # Enforce canonical CSD: clear adjacent nonzeros
+            for j in (i - 1, i + 1):
+                if n > j >= 0 != word[j]:
+                    word[j] = 0
+                    nonzero.remove(j)
 
-        mutated.append(mutated_coeff)
+            # Enforce max nonzero-digit budget
+            if len(nonzero) == N_digits:
+                lsnz = max(nonzero)   # least significant nonzero index
+                word[lsnz] = 0
+                nonzero.remove(lsnz)
 
-    return CSDIndividual(genome=coeffListToGenome(mutated))
+            word[i] = new
+            nonzero.add(i)
+
+        # Write the mutated coefficient back into the flat genome
+        mutated_genome[start:end] = word
+
+    if not isCSD(mutated_genome, wordlength, N_digits):
+        print("ERROR!")
+
+    return CSDIndividual(genome=mutated_genome)
 
 
 def onepoint_cross_CSD(p1, p2, wordlength):
@@ -108,7 +113,7 @@ def csd2_GA(
     generations=100,
     order=8,
     wordlength=8,
-    N_digits=3,
+    N_digits=2,
     target=lambda w: 1,
     fitness=minimax_fitness,
     worN=512,
