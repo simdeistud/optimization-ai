@@ -90,6 +90,18 @@ def onepoint_cross_CSD(p1, p2, wordlength):
 
     return CSDIndividual(genome=c1), CSDIndividual(genome=c2)
 
+def twopoint_cross_CSD(p1, p2, wordlength):
+    g1 = p1.genome
+    g2 = p2.genome
+    indexes = random.sample(range(1, int(len(g1) / wordlength) - 1), 2)
+    indexes.sort()
+    i, j = indexes
+    i *= wordlength
+    j *= wordlength
+    c1 = g1[:i] + g2[i:j] + g1[j:]
+    c2 = g2[:i] + g1[i:j] + g2[j:]
+    return CSDIndividual(genome=c1), CSDIndividual(genome=c2)
+
 
 def csd2_GA(
     n_pop=100,
