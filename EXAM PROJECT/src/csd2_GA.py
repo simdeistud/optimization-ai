@@ -134,7 +134,7 @@ def csd2_GA(
             p1 = parent_selection(pop, fit)
             p2 = parent_selection(pop, fit)
 
-            c1, c2 = onepoint_cross_CSD(p1, p2, wordlength)
+            c1, c2 = twopoint_cross_CSD(p1, p2, wordlength)
             c1 = mut_CSD(c1, wordlength, N_digits)
             c2 = mut_CSD(c2, wordlength, N_digits)
 
