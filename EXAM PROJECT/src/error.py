@@ -8,5 +8,5 @@ def minimax_error(individual, target, worN):
         td = target(wi)
         if td is None:
             continue
-        errs.append(abs(td - abs(hi)))
+        errs.append(abs(td - abs(hi))) # td is assumed to be real
     return max(errs)
