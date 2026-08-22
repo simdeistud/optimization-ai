@@ -1,14 +1,5 @@
-ipython
+scipy
 numpy
 matplotlib
-scipy
-scipy-stubs
-scikit-learn
-gplearn
-ipywidgets
-pandas
-graphviz
-neat-python
-networkx
-pygame
 seaborn
+pandas
